@@ -11,25 +11,34 @@ const server = http.createServer((req, res) => {
   res.end('Hello World\n');
 });
 
-const options = {
-  url: 'https://api.organizze.com.br/rest/v2/accounts',
+const getUrlPath = path => 'https://api.organizze.com.br/rest/v2' + path;
+
+const options = { 
   headers: {
     'User-Agent': 'Mariel Moura (mariel.moura@gmail.com)'
-  }
+  },
+  json: true
 };
 
-
-
-request.get(options, (error, response, body) => {
+request.get({ ...options, url: getUrlPath('/accounts')}, (error, response, body) => {
   console.error('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-  console.log('body:', body); // Print the HTML for the Google homepage.
+  console.log('body:', Array.isArray(body)); // Print the HTML for the Google homepage. 
 
-  // _.each(body, (value, key) => console.log(key));
+	const filteredAccounts = _.filter(body, ['archived', false]);
 
-  // for (var i = 0; i < body.length; i++) {
-  // 	console.log(body[i]);
-  // }
+  	for (s of filteredAccounts) { 
+  	 console.log(s) 
+  	};
+
+
+	request.get({ ...options, url: getUrlPath('/accounts')}, (error, response, body) => {
+		for (s of body) { 
+  	 			console.log(s) 
+  		};
+	});
+  
+
 
 }).auth('mariel.moura@gmail.com', '176773d36f2e056485b6e2092c0955e1f3639c8e', true);
 
